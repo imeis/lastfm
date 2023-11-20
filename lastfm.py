@@ -283,7 +283,7 @@ class LastFM:
             ],
         }
 
-    async def top_artists(self, username: str, period: str, limit: int = 1000):
+    async def top_artists(self, username: str, period: str = "overall", limit: int = 1000):
         response = await self.request(
             {
                 "method": "user.getTopArtists",
@@ -303,7 +303,7 @@ class LastFM:
             for artist in response["topartists"]["artist"]
         ]
 
-    async def top_tracks(self, username: str, period: str, limit: int = 1000):
+    async def top_tracks(self, username: str, period: str = "overall", limit: int = 1000):
         response = await self.request(
             {
                 "method": "user.getTopTracks",
@@ -327,7 +327,7 @@ class LastFM:
             for track in response["toptracks"]["track"]
         ]
 
-    async def top_albums(self, username: str, period: str, limit: int = 1000):
+    async def top_albums(self, username: str, period: str = "overall", limit: int = 1000):
         response = await self.request(
             {
                 "method": "user.getTopAlbums",
@@ -441,7 +441,7 @@ class LastFM:
             ],
         }
 
-    async def library_artists(self, username: str, period: str, limit: int = 1000):
+    async def library_artists(self, username: str, period: str = "overall", limit: int = 1000):
         response = await self.request(
             {
                 "method": "user.getTopArtists",
@@ -461,7 +461,7 @@ class LastFM:
             for artist in response["topartists"]["artist"]
         ]
 
-    async def library_tracks(self, username: str, period: str, limit: int = 1000):
+    async def library_tracks(self, username: str, period: str = "overall", limit: int = 1000):
         response = await self.request(
             {
                 "method": "user.getTopTracks",
@@ -485,7 +485,7 @@ class LastFM:
             for track in response["toptracks"]["track"]
         ]
 
-    async def library_albums(self, username: str, period: str, limit: int = 1000):
+    async def library_albums(self, username: str, period: str = "overall", limit: int = 1000):
         response = await self.request(
             {
                 "method": "user.getTopAlbums",
@@ -509,7 +509,7 @@ class LastFM:
             for album in response["topalbums"]["album"]
         ]
 
-    async def library_tags(self, username: str, period: str, limit: int = 1000):
+    async def library_tags(self, username: str, period: str = "overall", limit: int = 1000):
         Response = await self.request(
             {
                 "method": "user.getTopTags",
@@ -525,11 +525,7 @@ class LastFM:
         ]
 
     async def library(self, username: str):
-        tasks = list()
-        tasks.append(self.library_artists(username, "overall"))
-        tasks.append(self.library_albums(username, "overall"))
-        tasks.append(self.library_tracks(username, "overall"))
-        tasks.append(self.library_tags(username, "overall"))
+        tasks = [self.library_artists(username), self.library_albums(username), self.library_tracks(username), self.library_tags(username)]
         artists, albums, tracks, tags = await asyncio.gather(*tasks)
         return {
             "artists": artists,
